@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulado de Matemática — 5º Ano — Litro e Mililitro</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#5d687a;--accent:#3157d5;--ok:#177245;--bad:#b42318;--line:#dce2ee}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink);line-height:1.5}
+.container{max-width:1000px;margin:0 auto;padding:24px}
+header,.card,.result{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 6px 22px #18213a0d}
+header{padding:26px;margin-bottom:18px} h1{margin:0 0 8px;font-size:28px} h2{font-size:20px;margin:0 0 12px} p{margin:7px 0} .meta{color:var(--muted);font-size:14px}
+.badge{display:inline-block;background:#edf1ff;color:#2944a7;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700;margin:3px 4px 3px 0}
+.progress{height:10px;background:#e8ecf5;border-radius:999px;overflow:hidden;margin:16px 0 4px} .bar{height:100%;background:var(--accent);width:0}
+.qnav{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 18px} .qnav button{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer} .qnav button.done{background:#e9efff;border-color:#aebeff} .qnav button.current{outline:2px solid var(--accent)}
+.card{padding:22px;margin-bottom:16px} .qnum{font-weight:700;color:var(--accent);font-size:14px} .question{font-size:18px;font-weight:600;margin:7px 0 16px}
+.option{display:block;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:9px 0;cursor:pointer;background:#fff} .option:hover{background:#f7f9ff} .option input{margin-right:10px}
+.navrow{display:flex;justify-content:space-between;gap:10px;margin:16px 0} button.action{border:0;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer;background:var(--accent);color:#fff} button.secondary{background:#eef1f7;color:#25304a} button.finish{background:#177245}
+.hidden{display:none} .result{padding:26px;margin-top:18px} .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:15px 0} .stat{border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center} .stat strong{display:block;font-size:28px} .good{color:var(--ok)} .bad{color:var(--bad)} .summary{background:#f7f9fc;border-radius:14px;padding:16px;margin-top:15px}
+table{width:100%;border-collapse:collapse;margin-top:12px} th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left} th{background:#f5f7fb}
+.small{font-size:13px;color:var(--muted)} .error{color:var(--bad);font-weight:700}
+@media(max-width:650px){.container{padding:12px} h1{font-size:23px} .stats{grid-template-columns:1fr} .question{font-size:17px}}
+@media print{body{background:#fff} header,.qnav,.navrow{display:none!important} .card{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>Simulado de Matemática — 5º Ano</h1>
+<p><strong>Tema:</strong> Medidas de capacidade — litro (L) e mililitro (mL)</p>
+<p class="meta">60 questões • leitura, comparação, conversão e resolução de problemas • nível progressivo</p>
+<div>
+<span class="badge">EF05MA12 — proporcionalidade direta</span>
+<span class="badge">EF05MA13 — partilha em partes desiguais</span>
+<span class="badge">Medidas de capacidade — foco em L e mL</span>
+</div>
+<p class="small"><strong>Observação pedagógica:</strong> na BNCC, EF05MA12 e EF05MA13 tratam diretamente de proporcionalidade e partilha; o trabalho específico com capacidade e relações entre unidades aparece em EF05MA19. Por isso, o simulado combina L/mL com problemas de proporcionalidade e partilha.</p>
+<label><strong>Nome do aluno:</strong><br><input id="student" style="width:100%;max-width:500px;padding:10px;border:1px solid #cfd6e4;border-radius:10px;margin-top:6px" placeholder="Digite o nome"></label>
+<div class="progress"><div id="bar" class="bar"></div></div>
+<p id="progressText" class="small">Questão 1 de 60</p>
+</header>
+
+<div id="nav" class="qnav"></div>
+<main id="quiz"></main>
+<div class="navrow">
+<button id="prev" class="action secondary" onclick="prevQ()">← Anterior</button>
+<button id="next" class="action" onclick="nextQ()">Próxima →</button>
+<button id="finish" class="action finish hidden" onclick="finishQuiz()">Finalizar simulado</button>
+</div>
+<div id="result" class="result hidden"></div>
+</div>
+
+<script>
+const questions = [{"q": "Uma garrafa tem capacidade de 2 L. Essa capacidade corresponde a:", "opts": ["20 mL", "200 mL", "2 000 mL", "20 000 mL"], "ans": 2, "difficulty": "easy"}, {"q": "Qual unidade é mais adequada para medir a quantidade de água que cabe em um copo pequeno?", "opts": ["L", "mL", "km", "kg"], "ans": 1, "difficulty": "easy"}, {"q": "Uma jarra contém 1 500 mL de suco. Quantos litros isso representa?", "opts": ["0,15 L", "1,05 L", "1,5 L", "15 L"], "ans": 2, "difficulty": "easy"}, {"q": "Qual relação está correta?", "opts": ["1 L = 10 mL", "1 L = 100 mL", "1 L = 1 000 mL", "1 L = 10 000 mL"], "ans": 2, "difficulty": "easy"}, {"q": "Uma caixa-d'água tem 5 L de água. Quantos mililitros há nela?", "opts": ["500 mL", "5 000 mL", "50 000 mL", "5 mL"], "ans": 1, "difficulty": "easy"}, {"q": "Qual destas medidas representa a maior capacidade?", "opts": ["750 mL", "0,9 L", "1 200 mL", "1 L"], "ans": 2, "difficulty": "medium"}, {"q": "Uma embalagem informa 250 mL. Para completar 1 L, quantas embalagens iguais são necessárias?", "opts": ["2", "3", "4", "5"], "ans": 2, "difficulty": "medium"}, {"q": "Uma receita pede 1 L de leite, mas a pessoa só tem um medidor em mililitros. Ela deve medir:", "opts": ["10 mL", "100 mL", "1 000 mL", "10 000 mL"], "ans": 2, "difficulty": "easy"}, {"q": "Pedro comparou 900 mL com 1 L. Qual afirmação está correta?", "opts": ["900 mL é maior", "900 mL é igual a 1 L", "900 mL é menor", "Não é possível comparar"], "ans": 2, "difficulty": "easy"}, {"q": "Uma garrafa tem 1,25 L. Quantos mililitros ela comporta?", "opts": ["125 mL", "1 025 mL", "1 250 mL", "12 500 mL"], "ans": 2, "difficulty": "medium"}, {"q": "Uma cantina recebeu 3 recipientes: A = 2 L, B = 1 750 mL, C = 2 250 mL. Qual tem maior capacidade?", "opts": ["A", "B", "C", "A e B"], "ans": 2, "difficulty": "medium"}, {"q": "Qual sequência está em ordem crescente de capacidade?", "opts": ["2 L, 1 500 mL, 750 mL", "750 mL, 1 500 mL, 2 L", "1 500 mL, 750 mL, 2 L", "2 L, 750 mL, 1 500 mL"], "ans": 1, "difficulty": "medium"}, {"q": "Uma garrafa de 1,8 L e outra de 1 650 mL foram colocadas lado a lado. A diferença entre suas capacidades é:", "opts": ["15 mL", "150 mL", "250 mL", "1 500 mL"], "ans": 1, "difficulty": "medium"}, {"q": "Uma família consumiu 2 L de água pela manhã e 1 500 mL à tarde. Ao todo, consumiu:", "opts": ["2 500 mL", "3 000 mL", "3 500 mL", "4 500 mL"], "ans": 2, "difficulty": "medium"}, {"q": "Uma caixa contém 4 garrafas de 750 mL. Se todas estiverem cheias, há:", "opts": ["1,5 L", "2 L", "3 L", "4,75 L"], "ans": 2, "difficulty": "medium"}, {"q": "Uma receita usa 600 mL de leite. Para preparar 3 receitas iguais, serão necessários:", "opts": ["1 200 mL", "1 800 mL", "2 000 mL", "2 400 mL"], "ans": 1, "difficulty": "medium"}, {"q": "Um recipiente comporta 2 L. Já foram colocados 1 350 mL. Quanto falta para enchê-lo?", "opts": ["550 mL", "650 mL", "750 mL", "850 mL"], "ans": 1, "difficulty": "medium"}, {"q": "Em uma competição, uma equipe bebeu 4 garrafas de 500 mL e outra bebeu 3 garrafas de 750 mL. Qual equipe bebeu mais?", "opts": ["A primeira, por 250 mL", "A segunda, por 250 mL", "As duas beberam a mesma quantidade", "A primeira, por 500 mL"], "ans": 1, "difficulty": "medium"}, {"q": "Uma jarra de 2,5 L será dividida igualmente em 5 copos. Quantos mililitros irão para cada copo?", "opts": ["50 mL", "250 mL", "500 mL", "1 250 mL"], "ans": 2, "difficulty": "medium"}, {"q": "Uma loja vende suco em garrafas de 900 mL. Quantas garrafas são necessárias para obter exatamente 3,6 L?", "opts": ["3", "4", "5", "6"], "ans": 1, "difficulty": "medium"}, {"q": "Uma receita para 4 pessoas usa 800 mL de suco. Mantendo a mesma proporção, para 8 pessoas serão necessários:", "opts": ["1 L", "1,2 L", "1,6 L", "2 L"], "ans": 2, "difficulty": "medium"}, {"q": "Uma máquina enche 6 garrafas de 500 mL a cada ciclo. Quantos litros são produzidos em 3 ciclos?", "opts": ["6 L", "7,5 L", "9 L", "12 L"], "ans": 2, "difficulty": "hard"}, {"q": "Uma torneira libera 2 L em 4 minutos, mantendo o mesmo ritmo. Em 10 minutos, liberará:", "opts": ["4 L", "5 L", "6 L", "8 L"], "ans": 1, "difficulty": "hard"}, {"q": "Uma receita usa 1,2 L de água para fazer 6 porções. Quantos litros serão necessários para 10 porções, mantendo a proporção?", "opts": ["1,8 L", "2 L", "2,2 L", "2,4 L"], "ans": 1, "difficulty": "hard"}, {"q": "Uma fábrica coloca 750 mL em cada frasco. Quantos litros serão necessários para 8 frascos?", "opts": ["5 L", "6 L", "6,5 L", "7,5 L"], "ans": 1, "difficulty": "medium"}, {"q": "Um bebedouro fornece 3 L a cada 6 minutos. Se funcionar durante 20 minutos no mesmo ritmo, fornecerá:", "opts": ["6 L", "8 L", "10 L", "12 L"], "ans": 2, "difficulty": "hard"}, {"q": "Uma receita para 5 pessoas usa 1 000 mL de leite. Para 15 pessoas, usando a mesma proporção, serão necessários:", "opts": ["2 L", "2,5 L", "3 L", "3,5 L"], "ans": 2, "difficulty": "medium"}, {"q": "Uma fábrica produziu 12 garrafas de 250 mL pela manhã. À tarde, produziu o dobro dessa quantidade de garrafas, todas com 250 mL. Quantos litros produziu ao todo?", "opts": ["6 L", "7,5 L", "9 L", "12 L"], "ans": 2, "difficulty": "hard"}, {"q": "Um caminhão transporta 4 recipientes iguais, cada um com 1,5 L. Quantos litros transporta em 7 viagens iguais?", "opts": ["21 L", "28 L", "35 L", "42 L"], "ans": 0, "difficulty": "hard"}, {"q": "Uma escola usa 18 L de água para preparar 12 jarras iguais. Quantos litros serão necessários para 20 jarras, mantendo a proporção?", "opts": ["24 L", "27 L", "30 L", "36 L"], "ans": 2, "difficulty": "hard"}, {"q": "Uma garrafa de 1 500 mL será dividida em duas partes, sendo que uma terá o dobro da outra. Quanto terá a menor parte?", "opts": ["300 mL", "500 mL", "750 mL", "1 000 mL"], "ans": 1, "difficulty": "hard"}, {"q": "Um reservatório tem 2 400 mL de suco. Ele será dividido em duas partes, e a maior terá o dobro da menor. A maior parte terá:", "opts": ["800 mL", "1 200 mL", "1 600 mL", "1 800 mL"], "ans": 2, "difficulty": "hard"}, {"q": "Uma quantidade de 3 L de água será dividida entre dois recipientes. O primeiro receberá o dobro do segundo. Quantos litros receberá o segundo?", "opts": ["0,5 L", "1 L", "1,5 L", "2 L"], "ans": 1, "difficulty": "hard"}, {"q": "Uma jarra contém 2 100 mL. Ela será distribuída em dois copos, de modo que um receba 2 vezes a quantidade do outro. O copo menor receberá:", "opts": ["500 mL", "700 mL", "900 mL", "1 400 mL"], "ans": 1, "difficulty": "hard"}, {"q": "Uma quantidade de 4 500 mL foi separada em duas partes. A maior é o dobro da menor. Qual é a diferença entre as partes?", "opts": ["500 mL", "1 000 mL", "1 500 mL", "3 000 mL"], "ans": 2, "difficulty": "hard"}, {"q": "Um tanque tem 6 L de água. Uma parte será colocada em um recipiente e outra em outro, sendo que a primeira parte terá o dobro da segunda. Quanto ficará no recipiente menor?", "opts": ["1 L", "2 L", "3 L", "4 L"], "ans": 1, "difficulty": "hard"}, {"q": "Uma professora tem 3 600 mL de suco para dividir entre duas turmas. Uma turma receberá o dobro da outra. Quanto receberá a turma menor?", "opts": ["600 mL", "1 000 mL", "1 200 mL", "2 400 mL"], "ans": 2, "difficulty": "hard"}, {"q": "Dois recipientes receberam juntos 5 L de água. O primeiro recebeu 1 L a mais que o segundo. Quanto recebeu o segundo?", "opts": ["1,5 L", "2 L", "2,5 L", "3 L"], "ans": 1, "difficulty": "hard"}, {"q": "Uma quantidade de 4 000 mL foi dividida em duas partes. Uma parte ficou com 1 000 mL a mais que a outra. A menor parte é:", "opts": ["1 000 mL", "1 500 mL", "2 000 mL", "2 500 mL"], "ans": 1, "difficulty": "hard"}, {"q": "Dois galões juntos comportam 7,5 L. O maior comporta o dobro do menor. Qual é a capacidade do menor?", "opts": ["2 L", "2,5 L", "3 L", "5 L"], "ans": 1, "difficulty": "hard"}, {"q": "Uma escola comprou 10 garrafas de 1,2 L. Durante um evento, foram consumidos 7 500 mL. Quanto restou?", "opts": ["4,5 L", "5 L", "5,5 L", "6 L"], "ans": 0, "difficulty": "hard"}, {"q": "Uma caixa tem 24 frascos de 250 mL. Se 6 frascos forem retirados, quantos litros permanecerão?", "opts": ["4 L", "4,5 L", "5 L", "6 L"], "ans": 1, "difficulty": "hard"}, {"q": "Uma família possui 3 garrafas: 1,5 L, 750 mL e 2,25 L. Se misturar todo o conteúdo, obterá:", "opts": ["3,5 L", "4 L", "4,5 L", "5 L"], "ans": 2, "difficulty": "medium"}, {"q": "Um recipiente de 5 L está com 3 750 mL. Para completar a capacidade, é preciso acrescentar:", "opts": ["750 mL", "1 000 mL", "1 250 mL", "1 500 mL"], "ans": 2, "difficulty": "medium"}, {"q": "Uma pessoa bebeu 6 copos de 250 mL durante o dia. Depois bebeu mais 500 mL. Quantos litros bebeu ao todo?", "opts": ["1 L", "2 L", "2,5 L", "3 L"], "ans": 1, "difficulty": "medium"}, {"q": "Uma receita pede 2,4 L de água. O cozinheiro tem apenas copos de 300 mL. Quantos copos cheios são necessários?", "opts": ["6", "7", "8", "9"], "ans": 2, "difficulty": "hard"}, {"q": "Um aquário tem capacidade de 12 L. Foram colocados 8 recipientes de 750 mL. Quantos litros ainda faltam para completar o aquário?", "opts": ["4 L", "5 L", "6 L", "7 L"], "ans": 0, "difficulty": "hard"}, {"q": "Uma fábrica recebeu 15 L de produto e envasou tudo em frascos de 600 mL. Quantos frascos completos foram obtidos?", "opts": ["20", "25", "30", "35"], "ans": 1, "difficulty": "hard"}, {"q": "Uma cantina tinha 8 L de suco. Vendeu 12 copos de 400 mL. Quantos litros de suco sobraram?", "opts": ["2,8 L", "3,2 L", "4,8 L", "5,2 L"], "ans": 1, "difficulty": "hard"}, {"q": "Um reservatório tinha 10 L. Pela manhã, foram retirados 2 500 mL; à tarde, retiraram mais 1,75 L. Quanto restou?", "opts": ["5,25 L", "5,75 L", "6,25 L", "6,75 L"], "ans": 0, "difficulty": "hard"}, {"q": "Quatro alunos mediram o conteúdo de seus recipientes: Ana 1,05 L; Beto 950 mL; Caio 1 100 mL; Duda 1 L. Quem tinha a segunda maior quantidade?", "opts": ["Ana", "Beto", "Caio", "Duda"], "ans": 0, "difficulty": "hard"}, {"q": "Uma receita de 6 porções usa 900 mL de leite e 1,2 L de água. Para fazer 12 porções, qual será o total de líquidos?", "opts": ["3 L", "3,6 L", "4,2 L", "4,8 L"], "ans": 2, "difficulty": "hard"}, {"q": "Um caminhão levou 5 recipientes de 2,4 L. Em uma entrega, retirou 3 600 mL. Quanto restou no caminhão?", "opts": ["7,2 L", "8,4 L", "9,6 L", "10,4 L"], "ans": 2, "difficulty": "hard"}, {"q": "Uma escola recebeu 3 caixas, cada uma com 8 garrafas de 500 mL. Usou 5 L. Quantos litros restaram?", "opts": ["5 L", "6 L", "7 L", "8 L"], "ans": 1, "difficulty": "hard"}, {"q": "Um tanque de 9 L será dividido em duas partes, sendo uma parte o dobro da outra. Depois, a menor parte será usada inteira. Quantos litros continuarão no tanque?", "opts": ["3 L", "4 L", "6 L", "6,5 L"], "ans": 2, "difficulty": "hard"}, {"q": "Uma equipe precisa de 7,2 L de água. Possui garrafas de 900 mL. Quantas garrafas cheias correspondem exatamente a essa quantidade?", "opts": ["6", "7", "8", "9"], "ans": 2, "difficulty": "hard"}, {"q": "Uma fábrica produz 2,5 L de suco por minuto. Mantendo o ritmo, quantos litros produzirá em 8 minutos?", "opts": ["10 L", "15 L", "20 L", "25 L"], "ans": 2, "difficulty": "hard"}, {"q": "Uma jarra de 3 L foi preenchida com 5 copos iguais. Qual é a capacidade de cada copo?", "opts": ["300 mL", "500 mL", "600 mL", "750 mL"], "ans": 2, "difficulty": "hard"}, {"q": "Uma família precisa transportar 6 L de água. Ela possui recipientes de 1,5 L, 750 mL e 2 L. Qual combinação usa exatamente 6 L?", "opts": ["2 × 1,5 L + 2 × 750 mL + 1 × 2 L", "1 × 1,5 L + 2 × 750 mL + 1 × 2 L", "2 × 1,5 L + 1 × 750 mL + 1 × 2 L", "3 × 1,5 L + 1 × 750 mL"], "ans": 0, "difficulty": "hard"}, {"q": "Uma professora quer distribuir 4,8 L de suco em duas partes desiguais, de modo que uma seja o dobro da outra. Qual opção apresenta as duas quantidades corretas?", "opts": ["1,2 L e 3,6 L", "1,6 L e 3,2 L", "1,8 L e 3 L", "2 L e 2,8 L"], "ans": 1, "difficulty": "hard"}];
+let current=0;
+const answers = Array(questions.length).fill(null);
+const startTime = Date.now();
+
+function render(){
+  const item=questions[current];
+  document.getElementById('quiz').innerHTML = `
+    <section class="card">
+      <div class="qnum">QUESTÃO ${current+1} DE ${questions.length}</div>
+      <div class="question">${item.q}</div>
+      ${item.opts.map((o,i)=>`
+        <label class="option">
+          <input type="radio" name="q${current}" value="${i}" ${answers[current]===i?'checked':''} onchange="choose(${i})">
+          <span>${String.fromCharCode(65+i)}) ${o}</span>
+        </label>`).join('')}
+      <p class="small">Nível: ${item.difficulty==='easy'?'fundamental':item.difficulty==='medium'?'intermediário':'desafiador'}</p>
+    </section>`;
+  updateUI();
+}
+function choose(i){answers[current]=i; updateUI();}
+function updateUI(){
+  const done=answers.filter(a=>a!==null).length;
+  document.getElementById('bar').style.width=(done/questions.length*100)+'%';
+  document.getElementById('progressText').textContent=`Questão ${current+1} de ${questions.length} • ${done} respondidas`;
+  document.getElementById('prev').disabled=current===0;
+  document.getElementById('next').classList.toggle('hidden',current===questions.length-1);
+  document.getElementById('finish').classList.toggle('hidden',current!==questions.length-1);
+  document.querySelectorAll('#nav button').forEach((b,i)=>{b.classList.toggle('done',answers[i]!==null);b.classList.toggle('current',i===current)});
+}
+function nextQ(){if(current<questions.length-1){current++;render();window.scrollTo({top:0,behavior:'smooth'})}}
+function prevQ(){if(current>0){current--;render();window.scrollTo({top:0,behavior:'smooth'})}}
+function go(i){current=i;render();window.scrollTo({top:0,behavior:'smooth'})}
+
+function finishQuiz(){
+  const unanswered=answers.filter(a=>a===null).length;
+  if(unanswered>0 && !confirm(`Há ${unanswered} questão(ões) sem resposta. Deseja finalizar mesmo assim?`)) return;
+  const correct=answers.reduce((n,a,i)=>n+(a===questions[i].ans?1:0),0);
+  const wrong=questions.length-unanswered-correct;
+  const by={
+    easy:scoreLevel('easy'), medium:scoreLevel('medium'), hard:scoreLevel('hard')
+  };
+  const pct=Math.round(correct/questions.length*100);
+  const student=(document.getElementById('student').value||'Aluno(a)').trim();
+  const summary=makeSummary(correct,wrong,unanswered,pct,by);
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('nav').classList.add('hidden');
+  document.querySelector('.navrow').classList.add('hidden');
+  const r=document.getElementById('result');
+  r.classList.remove('hidden');
+  r.innerHTML=`
+    <h2>Resultado — ${escapeHtml(student)}</h2>
+    <div class="stats">
+      <div class="stat good"><span>Acertos</span><strong>${correct}</strong></div>
+      <div class="stat bad"><span>Erros</span><strong>${wrong}</strong></div>
+      <div class="stat"><span>Não respondidas</span><strong>${unanswered}</strong></div>
+    </div>
+    <p><strong>Aproveitamento:</strong> ${pct}%</p>
+    <div class="summary"><strong>Resumo do desempenho</strong><p>${summary}</p></div>
+    <table>
+      <thead><tr><th>Faixa</th><th>Acertos</th><th>Questões</th><th>Aproveitamento</th></tr></thead>
+      <tbody>
+       <tr><td>Fundamental</td><td>${by.easy.correct}</td><td>${by.easy.total}</td><td>${Math.round(by.easy.correct/by.easy.total*100)}%</td></tr>
+       <tr><td>Intermediário</td><td>${by.medium.correct}</td><td>${by.medium.total}</td><td>${Math.round(by.medium.correct/by.medium.total*100)}%</td></tr>
+       <tr><td>Desafiador</td><td>${by.hard.correct}</td><td>${by.hard.total}</td><td>${Math.round(by.hard.correct/by.hard.total*100)}%</td></tr>
+      </tbody>
+    </table>
+    <p class="small">O diagnóstico considera também a coerência entre o desempenho nas diferentes faixas de dificuldade. Ele é um indicador pedagógico, não uma prova de intenção ou de “chute”.</p>
+    <button class="action" onclick="location.reload()">Refazer simulado</button>
+  `;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function scoreLevel(level){
+  let correct=0,total=0;
+  questions.forEach((q,i)=>{if(q.difficulty===level){total++;if(answers[i]===q.ans)correct++;}});
+  return {correct,total};
+}
+function makeSummary(correct,wrong,unanswered,pct,by){
+  const e=by.easy.correct/by.easy.total, m=by.medium.correct/by.medium.total, h=by.hard.correct/by.hard.total;
+  let s='';
+  if(unanswered>=10) s+='Há muitas questões não respondidas; vale verificar se o aluno administrou bem o tempo e se conseguiu compreender os enunciados. ';
+  if(e>=.75 && h<.5) s+='O aluno consolidou melhor os itens fundamentais, mas apresentou dificuldade nos problemas mais desafiadores, especialmente os que exigem várias etapas de raciocínio. Recomenda-se revisar conversões L↔mL, proporcionalidade e partilha em partes desiguais. ';
+  else if(e<.5 && h>=.65) s+='O desempenho foi irregular: houve erros em questões fundamentais, enquanto alguns problemas desafiadores foram resolvidos. Isso sugere revisar conceitos básicos e observar se a leitura dos enunciados está sendo feita com atenção. ';
+  else if(e>=.75 && m>=.6 && h>=.6) s+='O desempenho mostra boa consolidação progressiva: o aluno manteve um resultado consistente também quando os problemas passaram a exigir mais etapas. ';
+  else if(e<.5 && m<.5 && h<.5) s+='O desempenho indica necessidade de retomada dos conceitos fundamentais antes de avançar para problemas de várias etapas. ';
+  else s+='O desempenho é misto. É importante analisar os erros por tipo de situação: conversão e comparação de L/mL, proporcionalidade direta e divisão em partes desiguais. ';
+  if(pct>=85) s+='O aproveitamento geral foi alto.';
+  else if(pct>=70) s+='O aproveitamento geral foi satisfatório, com alguns pontos a consolidar.';
+  else if(pct>=50) s+='O aproveitamento geral ficou em nível intermediário e merece reforço dirigido.';
+  else s+='O aproveitamento geral ficou abaixo do esperado para a consolidação do conteúdo.';
+  if(unanswered===0 && pct<35) s+=' Como todas as questões foram respondidas, o baixo percentual de acertos indica que é importante revisar o conteúdo e as estratégias de leitura.';
+  return s;
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+
+const nav=document.getElementById('nav');
+questions.forEach((_,i)=>{const b=document.createElement('button');b.textContent=i+1;b.onclick=()=>go(i);nav.appendChild(b);});
+render();
+</script>
+</body>
+</html>
